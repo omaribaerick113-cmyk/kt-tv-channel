@@ -1,0 +1,236 @@
+# local_backend: true
+# ^ LOCAL EDITING ONLY: remove the "#" at the start of this line to edit content on your own computer
+#   (it needs the "npm run cms" terminal running - see README-CMS.md).
+#   PUT THE "#" BACK before you push to GitHub, otherwise the live /admin page will not work.
+#
+# =====================================================================================
+# KT TV - Decap CMS configuration (this file controls the /admin page)
+#
+# How it fits together:
+#   * Every product, event and show is one small file inside the "content" folder.
+#   * This file tells Decap which boxes to show for each of those files.
+#   * The field names below (name, price, slug ...) MUST stay exactly as they are,
+#     because the website reads those same names. Only change labels and hints.
+#   * Run "npm run check:cms" any time you edit this file - it compares these field
+#     names with the real content files and tells you about any mismatch.
+# =====================================================================================
+
+# ---------- WHERE CONTENT IS SAVED (the "backend") ----------
+# Pick ONE of the two options below. Option 1 is switched on.
+
+# OPTION 1 (ACTIVE): Decap Turbo - a hosted login service, so editors sign in with an email
+# and password instead of needing an OAuth proxy.
+#   * turbo_site_id : the Site ID from your Turbo dashboard (site > Overview tab).
+#                     Replace the placeholder below. Until you do, login cannot work.
+#   * branch        : the Git branch to save to. If you set it here it OVERRIDES the
+#                     branch chosen in the Turbo dashboard.
+#   * repo          : do NOT add a "repo" line. With Turbo the repository is set in the Turbo
+#                     dashboard and any "repo" value written here is ignored. (If Turbo says
+#                     "requested repo does not match", fix the repo in the dashboard.)
+backend:
+  name: turbo-github
+  turbo_site_id: PASTE-YOUR-TURBO-SITE-ID
+  branch: main
+
+# OPTION 2 (OFF): plain GitHub login. To use it, put a "#" in front of every line of Option 1
+# above, and remove the "#" from the three lines below. This option needs an OAuth proxy
+# (for example one deployed on Vercel) and a base_url line pointing to it - see README-CMS.md.
+# backend:
+#   name: github
+#   repo: omaribaerick113-cmyk/kt-tv
+#   branch: main
+
+# ---------- PICTURES ----------
+# Pictures you upload in the CMS are saved into this folder of the project ...
+media_folder: public/images/uploads
+# ... and the website finds them at this web address (public/ becomes the site root,
+# so "public/images/uploads/x.webp" is served as "/images/uploads/x.webp").
+public_folder: /images/uploads
+
+# "simple" = Save/Publish writes straight to the branch above (no draft/review steps).
+publish_mode: simple
+
+# Optional: uncomment and use your real live address to get a "view live site" link in the CMS.
+# display_url: https://YOUR-SITE.vercel.app
+
+# Makes file names safe: no accents or odd characters in slugs.
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  # ===================================================================================
+  # PRODUCTS - one file per product in content/products/
+  # ===================================================================================
+  - name: products
+    label: Products
+    label_singular: Product
+    folder: content/products
+    create: true
+    slug: "{{slug}}"
+    # The list on the left of the CMS shows each product's name and price.
+    summary: "{{name}} - KES {{price}}"
+    fields:
+      - { label: Product name, name: name, widget: string }
+      - label: Slug (product ID and web address)
+        name: slug
+        widget: string
+        hint: "Lower-case letters, numbers and dashes only, e.g. kt-tv-premium-hoodie. It becomes the page address /shop/<slug>, so it must be unique. Do not change it after the product is live."
+      - { label: SKU (product code), name: sku, widget: string, required: false, hint: "Optional. Printed in the WhatsApp order message, e.g. KTTV-HOOD-001." }
+      - { label: Category, name: category, widget: select, options: [T-shirts, Hoodies, Sweatshirts, Jackets, Coats, Caps, Accessories, Other] }
+      - { label: Type, name: product_type, widget: string, required: false, hint: "Optional, e.g. Oversized tee or Pullover hoodie. Customers can search for it." }
+      - { label: Collection, name: collection, widget: select, options: [Gents, Ladies, Unisex], required: false, hint: "Decides which of the Gents / Ladies / Unisex pages the product appears on." }
+      - { label: Description, name: description, widget: text }
+      - { label: Price (KES), name: price, widget: number, value_type: int, min: 0, hint: "The normal price in Kenyan shillings, numbers only, e.g. 2500." }
+      - { label: Sale price (KES), name: sale_price, widget: number, value_type: int, min: 0, required: false, hint: "Optional. Must be LOWER than the price. When filled in, the normal price is crossed out, a SALE label shows, and this is the price used in orders. Clear it to end the sale." }
+      - { label: Featured, name: featured, widget: boolean, default: false, required: false, hint: "Show this product in the Trending Now section of the home page." }
+      - { label: New, name: new, widget: boolean, default: false, required: false, hint: "Shows a NEW label on the product." }
+      - { label: Published, name: published, widget: boolean, default: true, hint: "Turn off to hide the product from the website without deleting it." }
+      - { label: Show sample badge, name: demo, widget: boolean, default: false, required: false, hint: "Turn on ONLY for demo/sample products. It shows a SAMPLE label and marks WhatsApp orders as demo. Real products must have this OFF." }
+      - { label: Date added, name: date, widget: datetime, required: false, hint: "Optional. Used by the Newest sort and to pick the latest products for the home page." }
+      - label: Images
+        name: images
+        widget: list
+        required: false
+        summary: "{{fields.alt}}"
+        hint: "The FIRST image is the main photo. Portrait (4:5) photos look best. Add a short image description for each one."
+        fields:
+          - { label: Image, name: image, widget: image }
+          - { label: Image alt text, name: alt, widget: string, required: false, hint: "Describe the photo in a few words, e.g. Black KT TV hoodie, front view. Helps blind visitors and Google." }
+      - { label: Sizes, name: sizes, widget: list, required: false, hint: "Type each size and press Enter, e.g. S, M, L, XL. Leave empty for items without sizes (caps, bags)." }
+      - { label: Colours, name: colours, widget: list, required: false, hint: "Type each colour name, e.g. Black, Pink. Leave empty if there is only one." }
+      - label: Variants (stock per size and colour)
+        name: variants
+        widget: list
+        required: false
+        summary: "{{fields.size}} {{fields.colour}} - {{fields.stock}} in stock"
+        hint: "One row for every size + colour combination you sell. A combination you do NOT list shows as unavailable. For items without sizes, leave Size empty."
+        fields:
+          - { label: Size, name: size, widget: string, required: false, hint: "Must match one of the Sizes above exactly (e.g. M)." }
+          - { label: Colour, name: colour, widget: string, required: false, hint: "Must match one of the Colours above exactly (e.g. Black)." }
+          - { label: Stock (number in stock), name: stock, widget: number, value_type: int, min: 0, default: 10, hint: "How many you have. 0 = sold out, 1 to 5 shows Limited stock, and customers cannot order more than this." }
+      - { label: Stock (only when there are no variants), name: stock, widget: number, value_type: int, min: 0, required: false, hint: "Used only if you did not add any Variants. 0 = sold out." }
+      - { label: Search tags, name: tags, widget: list, required: false, hint: "Optional extra words customers might search for." }
+      - { label: Extra details, name: body, widget: markdown, required: false, hint: "Optional longer text shown under Product details." }
+
+  # ===================================================================================
+  # EVENTS - one file per event in content/events/
+  # ===================================================================================
+  - name: events
+    label: Events & Shows
+    label_singular: Event
+    folder: content/events
+    create: true
+    slug: "{{slug}}"
+    # The list shows each event's title and date.
+    summary: "{{title}} - {{date}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Slug (web address), name: slug, widget: string, hint: "Lower-case letters, numbers and dashes, e.g. kt-tv-live-night. The page address becomes /events/<slug>." }
+      - { label: Date, name: date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, hint: "Pick the day. Events whose day has passed move to Past events automatically." }
+      - { label: Time, name: start_time, widget: string, required: false, hint: "Optional, e.g. 7:00 PM EAT." }
+      - { label: Venue, name: venue, widget: string, required: false, hint: "Name of the place, e.g. Uhuru Gardens." }
+      - { label: Location, name: location, widget: string, required: false, hint: "Town or area, e.g. Nairobi, Kenya." }
+      - { label: Description, name: description, widget: text }
+      - { label: Poster image, name: poster, widget: image, required: false }
+      - { label: Poster alt text, name: poster_alt, widget: string, required: false, hint: "Describe the poster in a few words." }
+      - { label: Ticket price (KES), name: ticket_price, widget: number, value_type: int, min: 0, required: false, hint: "Optional. Use this for ONE simple price. Leave empty and the website shows no price. 0 means free." }
+      - { label: Ticket URL, name: ticket_url, widget: string, required: false, hint: "Optional. A real booking link starting with https://. The Get Tickets button only appears when this is filled in." }
+      - label: Ticket categories (several prices)
+        name: ticket_categories
+        widget: list
+        required: false
+        summary: "{{fields.category}} - KSh {{fields.price}}"
+        hint: "Optional. Use instead of Ticket price when you have several ticket types (e.g. Regular, VIP). Customers send a ticket ENQUIRY on WhatsApp - tickets are not sold on this site."
+        fields:
+          - { label: Category, name: category, widget: string }
+          - { label: Price (KES), name: price, widget: number, value_type: int, min: 0 }
+          - { label: Availability, name: availability, widget: select, options: [available, limited, sold_out], default: available }
+      - { label: Status, name: status, widget: select, options: [scheduled, postponed, cancelled, completed], default: scheduled, hint: "Choose cancelled or postponed if plans change; the event page shows it and hides ticket buttons." }
+      - { label: Ticket availability, name: availability_status, widget: select, options: [available, limited, sold_out, cancelled], default: available }
+      - { label: Featured, name: featured, widget: boolean, default: false, required: false }
+      - { label: Published, name: published, widget: boolean, default: true, hint: "Turn off to hide the event without deleting it." }
+      - { label: Show sample badge, name: demo, widget: boolean, default: false, required: false, hint: "Turn on ONLY for demo events. Real events must have this OFF." }
+      - { label: Extra details, name: body, widget: markdown, required: false, hint: "Optional longer text shown on the event page." }
+
+  # ===================================================================================
+  # SHOWS & VIDEOS - one file per show in content/videos/
+  # ===================================================================================
+  - name: videos
+    label: Shows & Videos
+    label_singular: Show
+    folder: content/videos
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Slug (web address), name: slug, widget: string, hint: "Lower-case letters, numbers and dashes, e.g. kt-tv-sessions-episode-2." }
+      - { label: Description, name: description, widget: text, required: false }
+      - { label: Category, name: category, widget: string, required: false, default: Show, hint: "A short label, e.g. Show, Interview, Vlog." }
+      - { label: Watch URL, name: watch_url, widget: string, required: false, hint: "Optional. A link starting with https:// for the video. The Watch Now button only appears when a valid link is here (or a YouTube link below); otherwise the card says Coming soon." }
+      - { label: YouTube URL, name: youtube_url, widget: string, required: false, hint: "Optional. A YouTube video link. If you add one, the YouTube picture is used when you do not upload a thumbnail." }
+      - { label: Thumbnail, name: thumbnail, widget: image, required: false, hint: "Optional. Wide 16:9 picture." }
+      - { label: Publication date, name: date, widget: datetime, required: false }
+      - { label: Featured, name: featured, widget: boolean, default: false, required: false, hint: "Shown first on the home page." }
+      - { label: Published, name: published, widget: boolean, default: true, hint: "Turn off to hide the show without deleting it." }
+      - { label: Show sample badge, name: demo, widget: boolean, default: false, required: false, hint: "Turn on ONLY for demo shows. Real shows must have this OFF." }
+
+  # ===================================================================================
+  # PAGES - About, Privacy Policy, Terms (one file per page in content/pages/)
+  # ===================================================================================
+  - name: pages
+    label: Pages
+    folder: content/pages
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { label: Page title, name: title, widget: string }
+      - { label: Slug, name: slug, widget: string, hint: "Keep about, privacy-policy and terms-and-conditions exactly as they are - the website looks pages up by these names." }
+      - { label: Meta description, name: meta_description, widget: text, required: false, hint: "One sentence shown on Google." }
+      - { label: Published, name: published, widget: boolean, default: true }
+      - { label: Body, name: body, widget: markdown }
+
+  # ===================================================================================
+  # SETTINGS - two single files in content/settings/
+  # ===================================================================================
+  - name: settings
+    label: Site settings
+    files:
+      - label: General settings
+        name: general
+        file: content/settings/general.yml
+        fields:
+          - { label: Business name, name: brand_name, widget: string }
+          - { label: Full business name, name: full_brand_name, widget: string }
+          - { label: Contact email, name: email, widget: string, hint: "Shown in the footer and on the Contact page." }
+          - { label: WhatsApp number, name: whatsapp_number, widget: string, hint: "DIGITS ONLY, country code first, no plus sign, spaces or dashes. Format: 2547XXXXXXXX. Every WhatsApp order and enquiry button uses this one number." }
+          - { label: Hero title, name: hero_headline, widget: string, hint: "Big headline at the top of the home page. The last sentence is shown in pink." }
+          - { label: Hero text, name: hero_description, widget: text }
+          - { label: Delivery information, name: delivery_info, widget: text, required: false, hint: "Shown on every product page under Delivery." }
+          - { label: Returns information, name: returns_info, widget: text, required: false, hint: "Shown on every product page under Returns and exchanges." }
+          - { label: Shop section title, name: shop_title, widget: string, required: false }
+          - { label: Shop section text, name: shop_text, widget: text, required: false }
+          - { label: Trending section title, name: trending_title, widget: string, required: false }
+          - { label: Events section title, name: events_title, widget: string, required: false }
+          - { label: Message when there are no events, name: events_empty_text, widget: string, required: false }
+          - { label: Shows section title, name: shows_title, widget: string, required: false }
+          - { label: Message when there are no shows, name: shows_empty_text, widget: string, required: false }
+          - { label: How ordering works - title, name: story_title, widget: string, required: false }
+          - { label: How ordering works - text, name: story_text, widget: text, required: false }
+          - { label: About text (backup), name: about_text, widget: text, required: false, hint: "Only used if the About page in Pages is empty." }
+      - label: Social media links
+        name: social
+        file: content/settings/social.yml
+        fields:
+          - { label: Facebook URL, name: facebook, widget: string, required: false, hint: "Full link starting with https://. Leave empty to hide the icon." }
+          - { label: YouTube URL, name: youtube, widget: string, required: false }
+          - { label: Instagram URL, name: instagram, widget: string, required: false }
+          - { label: TikTok URL, name: tiktok, widget: string, required: false }
+          - { label: X URL, name: x, widget: string, required: false }
+          - { label: Telegram URL, name: telegram, widget: string, required: false }
+          - { label: Spotify URL, name: spotify, widget: string, required: false }
+          - { label: Audiomack URL, name: audiomack, widget: string, required: false }
+          - { label: SoundCloud URL, name: soundcloud, widget: string, required: false }
