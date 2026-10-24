@@ -29,7 +29,7 @@
 #                     "requested repo does not match", fix the repo in the dashboard.)
 backend:
   name: turbo-github
-  turbo_site_id: PASTE-YOUR-TURBO-SITE-ID
+  turbo_site_id: d7e58114-2a3c-43c5-bd32-5a4b632acd7d
   branch: main
 
 # OPTION 2 (OFF): plain GitHub login. To use it, put a "#" in front of every line of Option 1
