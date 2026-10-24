@@ -177,3 +177,26 @@ test('events: a single ticket_price works as one ticket type, and is only report
   assert.equal(ticketInfo({ ticket_price: null }).categories.length, 0);
   assert.equal(ticketInfo({ ticket_price: 500, ticket_categories: [{ category: 'VIP', price: 900 }] }).categories.length, 1);
 });
+
+import { videoSource, buildReelItems, interleave } from '../src/utils/reel.js';
+test('videoSource: youtube, direct files and rejects bad values', () => {
+  assert.deepEqual(videoSource('https://youtu.be/abc123'), { type: 'youtube', id: 'abc123' });
+  assert.deepEqual(videoSource('https://example.com/clip.mp4?x=1'), { type: 'file', src: 'https://example.com/clip.mp4?x=1' });
+  for (const bad of ['', undefined, null, 'javascript:alert(1)', 'https://example.com/page', 'not a url']) assert.equal(videoSource(bad), null, String(bad));
+});
+test('interleave mixes groups in turns', () => {
+  assert.deepEqual(interleave([1, 2, 3], ['a'], ['x', 'y']), [1, 'a', 'x', 2, 'y', 3]);
+});
+test('buildReelItems: mixes shop, events and shows; videos only when valid', () => {
+  const items = buildReelItems({
+    products: [{ slug: 'cap', name: 'Cap', price: 1500, onSale: false, images: [{ src: '/c.webp', alt: 'Cap' }], video_url: 'https://youtu.be/zzz', demo: true }],
+    events: [{ slug: 'night', title: 'Night', venue: 'Nairobi', poster: '/p.webp', video_url: 'nonsense' }],
+    shows: [{ slug: 'live', title: 'Live', thumbnail: '/t.webp' }],
+    formatPrice: (n) => `KSh ${n}`, formatEventDate: () => '12 Dec'
+  });
+  assert.deepEqual(items.map((i) => i.kind), ['Shop', 'Event', 'Show']);
+  assert.equal(items[0].meta, 'KSh 1500'); assert.equal(items[0].video.type, 'youtube'); assert.equal(items[0].to, '/shop/cap'); assert.equal(items[0].demo, true);
+  assert.equal(items[1].video, null); assert.equal(items[1].meta, '12 Dec · Nairobi'); assert.equal(items[1].to, '/events/night');
+  assert.equal(items[2].video, null);
+  assert.deepEqual(buildReelItems({}), []);
+});

@@ -6,6 +6,7 @@ import { SectionHeading, EmptyState, SocialLinks } from '../components/common.js
 import ProductCard from '../components/ProductCard.jsx';
 import EventCard from '../components/EventCard.jsx';
 import ShowCard from '../components/ShowCard.jsx';
+import LiveReel from '../components/LiveReel.jsx';
 import { sortProducts, buildFacets } from '../utils/catalog.js';
 import { splitEvents } from '../utils/events.js';
 import { usePageMeta } from '../hooks/usePageMeta.js';
@@ -27,6 +28,7 @@ export default function Home() {
 
   return (
     <>
+      <LiveReel />
       <section className="hero">
         <div className="container hero-inner">
           <div className="hero-copy">

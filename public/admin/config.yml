@@ -1,38 +1,75 @@
+# local_backend: true
+# ^ LOCAL EDITING ONLY: remove the "#" at the start of this line to edit content on your own computer
+#   (it needs the "npm run cms" terminal running - see README-CMS.md).
+#   PUT THE "#" BACK before you push to GitHub, otherwise the live /admin page will not work.
+#
 # =====================================================================================
-# KT TV - Decap CMS configuration (TEST VERSION)
-# The backend below is "test-repo": it is only for checking that the CMS loads.
-# It saves nothing to GitHub. The real Turbo backend is kept in comments just below.
+# KT TV - Decap CMS configuration (this file controls the /admin page)
+#
+# How it fits together:
+#   * Every product, event and show is one small file inside the "content" folder.
+#   * This file tells Decap which boxes to show for each of those files.
+#   * The field names below (name, price, slug ...) MUST stay exactly as they are,
+#     because the website reads those same names. Only change labels and hints.
+#   * Run "npm run check:cms" any time you edit this file - it compares these field
+#     names with the real content files and tells you about any mismatch.
 # =====================================================================================
 
+# ---------- WHERE CONTENT IS SAVED (the "backend") ----------
+# Pick ONE of the two options below. Option 1 is switched on.
+
+# OPTION 1 (ACTIVE): Decap Turbo - a hosted login service, so editors sign in with an email
+# and password instead of needing an OAuth proxy.
+#   * turbo_site_id : the Site ID from your Turbo dashboard (site > Overview tab).
+#                     Replace the placeholder below. Until you do, login cannot work.
+#   * branch        : the Git branch to save to. If you set it here it OVERRIDES the
+#                     branch chosen in the Turbo dashboard.
+#   * repo          : do NOT add a "repo" line. With Turbo the repository is set in the Turbo
+#                     dashboard and any "repo" value written here is ignored. (If Turbo says
+#                     "requested repo does not match", fix the repo in the dashboard.)
 backend:
-  name: test-repo
+  name: turbo-github
+  turbo_site_id: PASTE-YOUR-TURBO-SITE-ID
+  branch: main
 
-# --- REAL BACKEND (Turbo): to restore it, delete the 2 lines above ("backend:" and
-# --- "name: test-repo") and remove the "#" from the 4 lines below ---
+# OPTION 2 (OFF): plain GitHub login. To use it, put a "#" in front of every line of Option 1
+# above, and remove the "#" from the three lines below. This option needs an OAuth proxy
+# (for example one deployed on Vercel) and a base_url line pointing to it - see README-CMS.md.
 # backend:
-#   name: turbo-github
-#   turbo_site_id: d7e58114-2a3c-43c5-bd32-5a4b632acd7d
+#   name: github
+#   repo: omaribaerick113-cmyk/kt-tv
 #   branch: main
 
 # ---------- PICTURES ----------
+# Pictures you upload in the CMS are saved into this folder of the project ...
 media_folder: public/images/uploads
+# ... and the website finds them at this web address (public/ becomes the site root,
+# so "public/images/uploads/x.webp" is served as "/images/uploads/x.webp").
 public_folder: /images/uploads
 
+# "simple" = Save/Publish writes straight to the branch above (no draft/review steps).
 publish_mode: simple
 
+# Optional: uncomment and use your real live address to get a "view live site" link in the CMS.
+# display_url: https://YOUR-SITE.vercel.app
+
+# Makes file names safe: no accents or odd characters in slugs.
 slug:
   encoding: ascii
   clean_accents: true
   sanitize_replacement: "-"
 
 collections:
-  # ---------- PRODUCTS ----------
+  # ===================================================================================
+  # PRODUCTS - one file per product in content/products/
+  # ===================================================================================
   - name: products
     label: Products
     label_singular: Product
     folder: content/products
     create: true
     slug: "{{slug}}"
+    # The list on the left of the CMS shows each product's name and price.
     summary: "{{name}} - KES {{price}}"
     fields:
       - { label: Product name, name: name, widget: string }
@@ -49,6 +86,7 @@ collections:
       - { label: Sale price (KES), name: sale_price, widget: number, value_type: int, min: 0, required: false, hint: "Optional. Must be LOWER than the price. When filled in, the normal price is crossed out, a SALE label shows, and this is the price used in orders. Clear it to end the sale." }
       - { label: Featured, name: featured, widget: boolean, default: false, required: false, hint: "Show this product in the Trending Now section of the home page." }
       - { label: New, name: new, widget: boolean, default: false, required: false, hint: "Shows a NEW label on the product." }
+      - { label: Video URL, name: video_url, widget: string, required: false, hint: "Optional. A YouTube link (https://youtu.be/...) or a direct .mp4/.webm file link. It plays in the KT TV Live strip at the top of the home page. Leave empty to show the picture only." }
       - { label: Published, name: published, widget: boolean, default: true, hint: "Turn off to hide the product from the website without deleting it." }
       - { label: Show sample badge, name: demo, widget: boolean, default: false, required: false, hint: "Turn on ONLY for demo/sample products. It shows a SAMPLE label and marks WhatsApp orders as demo. Real products must have this OFF." }
       - { label: Date added, name: date, widget: datetime, required: false, hint: "Optional. Used by the Newest sort and to pick the latest products for the home page." }
@@ -77,13 +115,16 @@ collections:
       - { label: Search tags, name: tags, widget: list, required: false, hint: "Optional extra words customers might search for." }
       - { label: Extra details, name: body, widget: markdown, required: false, hint: "Optional longer text shown under Product details." }
 
-  # ---------- EVENTS ----------
+  # ===================================================================================
+  # EVENTS - one file per event in content/events/
+  # ===================================================================================
   - name: events
     label: Events & Shows
     label_singular: Event
     folder: content/events
     create: true
     slug: "{{slug}}"
+    # The list shows each event's title and date.
     summary: "{{title}} - {{date}}"
     fields:
       - { label: Title, name: title, widget: string }
@@ -110,11 +151,14 @@ collections:
       - { label: Status, name: status, widget: select, options: [scheduled, postponed, cancelled, completed], default: scheduled, hint: "Choose cancelled or postponed if plans change; the event page shows it and hides ticket buttons." }
       - { label: Ticket availability, name: availability_status, widget: select, options: [available, limited, sold_out, cancelled], default: available }
       - { label: Featured, name: featured, widget: boolean, default: false, required: false }
+      - { label: Video URL, name: video_url, widget: string, required: false, hint: "Optional. A YouTube link (https://youtu.be/...) or a direct .mp4/.webm file link. It plays in the KT TV Live strip at the top of the home page. Leave empty to show the picture only." }
       - { label: Published, name: published, widget: boolean, default: true, hint: "Turn off to hide the event without deleting it." }
       - { label: Show sample badge, name: demo, widget: boolean, default: false, required: false, hint: "Turn on ONLY for demo events. Real events must have this OFF." }
       - { label: Extra details, name: body, widget: markdown, required: false, hint: "Optional longer text shown on the event page." }
 
-  # ---------- SHOWS & VIDEOS ----------
+  # ===================================================================================
+  # SHOWS & VIDEOS - one file per show in content/videos/
+  # ===================================================================================
   - name: videos
     label: Shows & Videos
     label_singular: Show
@@ -135,7 +179,9 @@ collections:
       - { label: Published, name: published, widget: boolean, default: true, hint: "Turn off to hide the show without deleting it." }
       - { label: Show sample badge, name: demo, widget: boolean, default: false, required: false, hint: "Turn on ONLY for demo shows. Real shows must have this OFF." }
 
-  # ---------- PAGES ----------
+  # ===================================================================================
+  # PAGES - About, Privacy Policy, Terms (one file per page in content/pages/)
+  # ===================================================================================
   - name: pages
     label: Pages
     folder: content/pages
@@ -149,7 +195,9 @@ collections:
       - { label: Published, name: published, widget: boolean, default: true }
       - { label: Body, name: body, widget: markdown }
 
-  # ---------- SETTINGS ----------
+  # ===================================================================================
+  # SETTINGS - two single files in content/settings/
+  # ===================================================================================
   - name: settings
     label: Site settings
     files:
