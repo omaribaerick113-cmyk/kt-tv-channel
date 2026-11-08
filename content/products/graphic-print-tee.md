@@ -1,9 +1,9 @@
 ---
 name: KT TV Graphic Print T-Shirt
 slug: graphic-print-tee
-sku: DEMO-TEE-003
-demo: true
-description: SAMPLE PRODUCT — Statement graphic tee in two colourways.
+sku: NEW-TEE-003
+new: true
+description: Statement graphic tee in two colourways.
 price: 2200
 sale_price: 1900
 collection: Ladies
@@ -15,9 +15,9 @@ tags:
 - tee
 date: '2026-10-09'
 images:
-- image: /images/uploads/demo/tee-graphic-1.webp
+- image: /images/uploads/new/tee-graphic-1.webp
   alt: Sample white KT TV graphic print t-shirt
-- image: /images/uploads/demo/tee-graphic-2.webp
+- image: /images/uploads/new/tee-graphic-2.webp
   alt: Sample black KT TV graphic print t-shirt
 sizes:
 - S
@@ -57,4 +57,3 @@ new: false
 featured: false
 published: true
 ---
-**DEMO / SAMPLE LISTING.** This product, its price, photos and stock are examples only. Replace or unpublish it in the CMS (Products) before launch.

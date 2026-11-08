@@ -1,9 +1,9 @@
 ---
 name: KT TV Logo Tote Bag
 slug: logo-tote-bag
-sku: DEMO-TOTE-001
-demo: true
-description: SAMPLE PRODUCT — Carry-all tote with the large KT TV logo print.
+sku: NEW-TOTE-001
+new: true
+description: Carry-all tote with the large KT TV logo print.
 price: 1200
 collection: Unisex
 category: Accessories
@@ -14,9 +14,9 @@ tags:
 - accessory
 date: '2026-10-01'
 images:
-- image: /images/uploads/demo/tote-bag-1.webp
+- image: /images/uploads/new/tote-bag-1.webp
   alt: Sample black KT TV tote bag
-- image: /images/uploads/demo/tote-bag-2.webp
+- image: /images/uploads/new/tote-bag-2.webp
   alt: Sample white KT TV tote bag
 sizes: []
 colours:
@@ -32,4 +32,3 @@ new: false
 featured: false
 published: true
 ---
-**DEMO / SAMPLE LISTING.** This product, its price, photos and stock are examples only. Replace or unpublish it in the CMS (Products) before launch.

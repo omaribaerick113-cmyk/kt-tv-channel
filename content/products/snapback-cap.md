@@ -1,9 +1,9 @@
 ---
 name: KT TV Snapback Cap
 slug: snapback-cap
-sku: DEMO-CAP-001
-demo: true
-description: SAMPLE PRODUCT — Adjustable snapback with the KT TV logo.
+sku: NEW-CAP-001
+new: true
+description: Adjustable snapback with the KT TV logo.
 price: 1500
 collection: Unisex
 category: Accessories
@@ -14,9 +14,9 @@ tags:
 - hat
 date: '2026-10-03'
 images:
-- image: /images/uploads/demo/cap-snapback-1.webp
+- image: /images/uploads/new/cap-snapback-1.webp
   alt: Sample black KT TV snapback cap
-- image: /images/uploads/demo/cap-snapback-2.webp
+- image: /images/uploads/new/cap-snapback-2.webp
   alt: Sample pink KT TV snapback cap
 sizes: []
 colours:
@@ -32,4 +32,3 @@ new: false
 featured: false
 published: true
 ---
-**DEMO / SAMPLE LISTING.** This product, its price, photos and stock are examples only. Replace or unpublish it in the CMS (Products) before launch.

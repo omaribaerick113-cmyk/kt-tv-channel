@@ -1,9 +1,9 @@
 ---
 name: KT TV Signature Hoodie
 slug: signature-hoodie
-sku: DEMO-HOOD-002
-demo: true
-description: SAMPLE PRODUCT — The signature KT TV hoodie in hot pink or black.
+sku: NEW-HOOD-002
+new: true
+description: The signature KT TV hoodie in hot pink or black.
 price: 5200
 collection: Gents
 category: Hoodies
@@ -13,9 +13,9 @@ tags:
 - signature
 date: '2026-10-05'
 images:
-- image: /images/uploads/demo/hoodie-signature-1.webp
+- image: /images/uploads/new/hoodie-signature-1.webp
   alt: Sample pink KT TV signature hoodie
-- image: /images/uploads/demo/hoodie-signature-2.webp
+- image: /images/uploads/new/hoodie-signature-2.webp
   alt: Sample black KT TV signature hoodie with KT print
 sizes:
 - S
@@ -62,4 +62,3 @@ new: false
 featured: true
 published: true
 ---
-**DEMO / SAMPLE LISTING.** This product, its price, photos and stock are examples only. Replace or unpublish it in the CMS (Products) before launch.

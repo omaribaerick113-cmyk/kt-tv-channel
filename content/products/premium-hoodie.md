@@ -1,9 +1,9 @@
 ---
 name: KT TV Premium Hoodie
 slug: premium-hoodie
-sku: DEMO-HOOD-001
-demo: true
-description: SAMPLE PRODUCT — Heavyweight-feel pullover hoodie with the KT TV logo.
+sku: NEW-HOOD-001
+new: true
+description: Heavyweight-feel pullover hoodie with the KT TV logo.
 price: 4500
 collection: Unisex
 category: Hoodies
@@ -13,9 +13,9 @@ tags:
 - premium
 date: '2026-10-08'
 images:
-- image: /images/uploads/demo/hoodie-premium-1.webp
+- image: /images/uploads/new/hoodie-premium-1.webp
   alt: Sample black KT TV premium hoodie
-- image: /images/uploads/demo/hoodie-premium-2.webp
+- image: /images/uploads/new/hoodie-premium-2.webp
   alt: Sample charcoal KT TV premium hoodie
 sizes:
 - S
@@ -62,4 +62,3 @@ new: false
 featured: false
 published: true
 ---
-**DEMO / SAMPLE LISTING.** This product, its price, photos and stock are examples only. Replace or unpublish it in the CMS (Products) before launch.

@@ -1,9 +1,9 @@
 ---
 name: KT TV Oversized Streetwear T-Shirt
 slug: oversized-streetwear-tee
-sku: DEMO-TEE-002
-demo: true
-description: SAMPLE PRODUCT — Relaxed oversized fit with a bold KT TV front print.
+sku: NEW-TEE-002
+new: true
+description: Relaxed oversized fit with a bold KT TV front print.
 price: 2500
 collection: Gents
 category: T-shirts
@@ -14,9 +14,9 @@ tags:
 - tee
 date: '2026-10-12'
 images:
-- image: /images/uploads/demo/tee-oversized-1.webp
+- image: /images/uploads/new/tee-oversized-1.webp
   alt: Sample charcoal oversized KT TV t-shirt
-- image: /images/uploads/demo/tee-oversized-2.webp
+- image: /images/uploads/new/tee-oversized-2.webp
   alt: Sample pink oversized KT TV t-shirt with KT print
 sizes:
 - S
@@ -56,4 +56,3 @@ new: false
 featured: true
 published: true
 ---
-**DEMO / SAMPLE LISTING.** This product, its price, photos and stock are examples only. Replace or unpublish it in the CMS (Products) before launch.
